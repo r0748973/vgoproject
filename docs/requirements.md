@@ -21,6 +21,7 @@ This page describes the minimal functionality you should implement.
   * We will not question your aesthetic choices, but we require you to at least make some effort and use brushes/fonts/...
 * Make commands/converters/... as reusable as possible
 * MVVM-compliant
+* At least three extensions (see below).
 
 ## Extensions
 
@@ -45,6 +46,8 @@ This page describes the minimal functionality you should implement.
 * Sound/Music
 * Animations
 * Themes
+
+You can invent your own extensions, but check with the lecturer first to make sure they're not trivial to implement.
 
 ## Notes
 
