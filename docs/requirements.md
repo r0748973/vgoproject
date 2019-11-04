@@ -2,6 +2,9 @@
 
 This page describes the minimal functionality you should implement.
 
+* The code implementing minimal requirements must contain no MVVM-related mistakes, otherwise you do not get a passing grade.
+* The extensions should also be MVVM correct. You need to make a certain number of extensions (see below for the exact number). Extensions that contain MVVM mistakes will not count towards this number. We therefore strongly advise you to make some "extra safety extensions" in case you accidentally make a mistake in one.
+
 **NOTE** This page is work in progress.
 
 ## Minimum
