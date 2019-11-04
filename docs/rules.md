@@ -222,6 +222,15 @@ As mentioned earlier, the VM should only expose conceptual information.
 If you want to be able to notify the user that (s)he has won,
 provide a `Cell<bool> hasWon` which the view can then choose to observe.
 
+## Music in the VM
+
+Music, sounds, etc. are all part of the view. The VM should
+not in any way make reference to such things. If you want
+some sound to start playing at a certain event (e.g. puzzle is solved),
+the VM should only provide a way to be notified when the puzzle is solved
+(e.g. an event or a `Cell<bool>`). It is up to the view to keep
+an eye on this event/cell and play the sound when needed.
+
 ## Program Initialization
 
 Move your program initialization to the `App` class, more specifically
