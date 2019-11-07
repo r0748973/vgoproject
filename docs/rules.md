@@ -268,3 +268,15 @@ code and have other classes inherit from it.
 Converters often suffer the same fate. If converters look alike, again, find whatever they have in common,
 generalize the class using parameters, etc. Unnecessary duplication of code
 is one of the cardinal sins of software engineering. Do be critical of your own code.
+
+## WinForms
+
+WinForms is another Windows GUI library, i.e., an alternative to WPF.
+In the past, some people have relied on WinForms classes to create their
+project. This makes **no sense** whatsoever. Please **do not** combine
+two GUI libraries in a single project.
+
+Added to this, some used WinForms classes in their VM, claiming
+it was ok because their VM was not dependent on WPF. While technically correct,
+we do not want the VM to be dependent on *any* GUI library. In other words,
+using WinForms in your VM is in clear violation of the rules.
