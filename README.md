@@ -10,4 +10,5 @@ Work in progress. Watch the repo (see setup instructions) to be notified wheneve
 * [Rules and Expectations](docs/rules.md)
 * [Creating an Archive](docs/archive.md)
 * [Addenda](docs/addenda.md)
+* [Chronometer explanations](docs/chronometer.md)
 * [Samples repo](https://github.com/fvogels/samples) contains some WPF samples that could help you (especially screens and skins)
