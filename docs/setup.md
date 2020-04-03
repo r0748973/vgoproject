@@ -35,6 +35,8 @@ In order to get e-mails whenever updates are made available, you can
 register as a watcher: on the [main repository's website](https://github.com/UCLeuvenLimburg/picross-student),
 click the Watch button.
 
+**IMPORTANT** Make sure to keep your repository up to date!
+
 ## Opening in Visual Studio
 
 Open the solution `PiCross.sln`. In the Solution Explorer,
