@@ -828,7 +828,6 @@ has a property `RowConstraints` of type `ISequence<IPlayablePuzzleConstraints>`.
     }
 ```
 
-
 We guess there is one `IPlayablePuzzleConstraints` per row, so
 we expect one `IPlayablePuzzleConstraints` object to model a list
 of integers. Navigate through the code (using F12 to jump straight to a definition always
@@ -843,6 +842,14 @@ Update the bindings in the XAML so as to make the right constraints appear:
 1 1
 5
 ```
+
+**Hint** both bindings will need to be corrected. Start with the `ItemsControl`'s `ItemsSource` property.
+Start by finding out what the `ItemsControl`'s `DataContext` is. A quick way (a bit hacky) is the
+change the binding to `{Binding SomeCrap}`. If you run the application in debug mode, you'll notice
+error messages in the output pane. These mention which type the `DataContext` has.
+`ItemsControl` expects this to be an `IEnumerable`, but you'll find out that isn't the case.
+You'll need to update the binding so as to refer to a specific property
+of this object: `{Binding SomePropertyOfTheDataContext}`.
 
 ## Future Steps
 
