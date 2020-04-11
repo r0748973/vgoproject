@@ -1,3 +1,5 @@
+:source-highlighter: rouge
+
 = Getting started
 
 == PiCross
@@ -129,12 +131,13 @@ This is probably the most complicated part of developing PiCross, and unfortunat
 little choice but to start with it.
 To alleviate your pain, we have written a `PiCrossControl` for you.
 
-### Step 1: Red Rectangles
+=== Step 1: Red Rectangles
 
 To learn to work with it, careful experimentation is key.
 Let's start with adding a `PiCrossControl` to our `MainWindow`:
 
-```diff
+[source,diff]
+----
   <Window x:Class="View.MainWindow"
           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -148,28 +151,27 @@ Let's start with adding a `PiCrossControl` to our `MainWindow`:
 +         </controls:PiCrossControl>
       </Grid>
   </Window>
-```
+----
 
-`PiCrossControl` cannot magically know what to show. We need to give it
-some data. In WPF, this is geneerally done using dependency properties, so
-let's explore what properties `PiCrossControl` has to offer. For this, you
-can either take a look at its source code or use the XAML Designer help you.
+`PiCrossControl` cannot magically know what to show.
+We need to give it some data.
+In WPF, this is generally done using __dependency properties__, so let's explore which such properties `PiCrossControl` has to offer.
+For this, you can either take a look at its source code or use the XAML Designer help you.
 
-The `Grid` property allows you to tell `PiCrossControl` which grid
-to draw. The property's type is `IGrid<object>`, which means
-you can pass along any object you wish. This raises the question:
-how can `PiCrossControl` know how to draw that object?
+The `Grid` property allows you to tell `PiCrossControl` which grid to draw.
+The property's type is `IGrid<object>`, which means you can pass along any object you wish.
+This raises the question: how can `PiCrossControl` know how to draw that object?
 
-`SquareTemplate` seems like an interesting property: it tells `PiCrossControl` how
-to draw each square in the `Grid`. It looks as if we're now ready to get
-something to appear on our screens.
+`SquareTemplate` seems like an interesting property: it tells `PiCrossControl` how to draw each square in the `Grid`.
+It looks as if we're now ready to get something to appear on our screens.
 
 First, we need a `IGrid<object>`. We can make one using `Grid.Create`.
 
-```diff
+[source,diff]
+----
   // Using declarations
-+ using Grid = DataStructures.Grid;
-+ using Size = DataStructures.Size;
++ using Grid = DataStructures.Grid; <!--1-->
++ using Size = DataStructures.Size; <!--2-->
 
   namespace View
   {
@@ -181,38 +183,33 @@ First, we need a `IGrid<object>`. We can make one using `Grid.Create`.
           public MainWindow()
           {
               InitializeComponent();
-
-+             var grid = Grid.Create<string>( new Size( 5, 5 ), p => "x" );
++
++             var grid = Grid.Create<string>( new Size( 5, 5 ), p => "x" ); <!--3-->
           }
       }
   }
-```
-
-Both WPF and our code define `Grid` and `Size`. If we were to simply use
-`Grid` and `Size` in our code, the compiler would not know which one
-we meant. The `using` declarations at the top of the file
-resolve this ambiguity: it effectly tells the compiler
-that whenever you write `Grid`, you men `DataStructures.Grid`.
-Idem for `Size`.
-
-The line added to `MainWindow`'s constructor creates a 5&times;5 grid
-filled with `"x"`. Understanding the second parameter
-is not important, but for those interested: it's an anonymous function
-that given a parameter `p` (of type `Vector2D`, which is inferred by the compiler)
-returns `"x"`.
+----
+<1> Both WPF and our code define `Grid` and `Size`.
+If we were to simply use `Grid` and `Size` in our code, the compiler would not know which one we meant.
+The `using` declarations at the top of the file resolve this ambiguity: it effectly tells the compiler that whenever you write `Grid`, you mean `DataStructures.Grid`.
+<2> Idem for `Size`.
+<3> The line added to `MainWindow`'s constructor creates a 5&times;5 grid filled with `"x"`.
+Understanding the second parameter is not important, but for those interested: it's an anonymous function
+that given a parameter `p` (of type `Vector2D`, which is inferred by the compiler) returns `"x"`.
 
 So, now we've got a 5&times;5 grid filled with `"x"`es. It's a good enough start.
 We'll fill it with more interesting values later on.
 Let's focus now on finding a way to pass this grid along to our `PiCrossControl`.
 The easiest way to achieve this is to give the control a name:
 
-```diff
+[source,diff]
+----
   <Grid>
 -     <controls:PiCrossControl>
 +     <controls:PiCrossControl x:Name="picrossControl">
       </controls:PiCrossControl>
   </Grid>
-```
+----
 
 and to programmatically set its `Grid` property:
 
