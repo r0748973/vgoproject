@@ -1,9 +1,9 @@
-# Getting started
+= Getting started
 
-## PiCross
+== PiCross
 
-PiCross puzzles are also known as *nonograms*.
-First, you should familiarize yourself with the game: read the [rules](https://en.wikipedia.org/wiki/Nonogram)
+PiCross puzzles are also known as __nonograms__.
+First, you should familiarize yourself with the game: read the https://en.wikipedia.org/wiki/Nonogram[rules]
 and solve some puzzles online:
 
 * https://www.nonograms.org/
@@ -15,16 +15,17 @@ Let's introduce some terminology:
 * The central part of the puzzle is called the *grid*.
 * The grid is made out of *squares*.
 * The numbers on the sides of the grid are called the *constraints*.
-  The numbers on the left are the *row constraints*, the numbers on the top
-  are the *column constraints*.
+** The numbers on the left are the *row constraints*.
+** The numbers on the top are the *column constraints*.
 
-## `Puzzle` Class
+== `Puzzle` Class
 
-The first thing we'll want to implement is a working playable puzzle, i.e. focus on creating a GUI that
-allows people to play a puzzle and ignore all the other functionality the domain offers.
+The first thing we'll want to implement is a working playable puzzle, i.e., focus on creating a GUI that allows people to play a puzzle and ignore all the other functionality the domain offers.
 
-First, we need a puzzle to solve. A puzzle is modeled by the `Puzzle` class.
-A `Puzzle` object contains all information about a puzzle. The most important members are
+First, we need a puzzle to solve.
+A puzzle is modeled by the `Puzzle` class.
+A `Puzzle` object contains all information about a puzzle.
+The most important members are
 
 * the `Grid` property: this grid contains the actual solution of the puzzle. It has type
  `IGrid<bool>`, where `true` values represent filled squares and `false` empty squares.
@@ -34,13 +35,14 @@ A `Puzzle` object contains all information about a puzzle. The most important me
 
 A `Puzzle` object is *immutable*, which means that once created, it can never be changed.
 
-## Creating a `Puzzle` Object
+== Creating a `Puzzle` Object
 
 The `Puzzle` class sports multiple static factory methods which you can use to create a puzzle,
 either from constraints using `Puzzle.FromConstraints` or from the solution using `Puzzle.FromRowStrings`.
 For example,
 
-```C#
+[source,csharp]
+----
 var puzzle = Puzzle.FromRowStrings(
     "xxxxx",
     "x...x",
@@ -48,49 +50,45 @@ var puzzle = Puzzle.FromRowStrings(
     "x...x",
     "xxxxx"
 )
-```
+----
 
 creates a puzzle whose solution is a 5&times;5 square.
 
-## Creating a Playable Puzzle
+== Creating a Playable Puzzle
 
-The `Puzzle` class does not provide any functionality to interact with a puzzle.
+The `Puzzle` class does not provide any functionality to __solve__ a puzzle.
 Instead, it just contains the data describing the puzzle.
 
 * A `Puzzle` is immutable. It would be a rather absurd game if the player
   is not able to do anything.
-* A `Puzzle`'s Grid contains `bool`s: either a square is filled, or it is empty.
-  To solve a puzzle, we also want an "as of yet unknown" value. When
-  starting to solve a puzzle, the entire grid should be filled with this `unknown` value,
-  and the player then completes the puzzle by gradually marking
-  certain squares as empty or filled.
+* A ``Puzzle``'s Grid contains ``bool``s: either a square is filled, or it is empty.
+  To solve a puzzle, we also want an "as of yet unknown" value.
+  When starting to solve a puzzle, the entire grid should be filled with this `unknown` value, and the player then completes the puzzle by gradually marking certain squares as empty or filled.
 
 The domain offers a separate class called `PlayablePuzzle`.
-`PlayablePuzzle` objects offer a *modifiable* grid of type
-`IGrid<IPlayablePuzzleSquare>`. Each square in this grid can contain one of *three* possible values:
-`Square.UNKNOWN`, `Square.FILLED` or `Square.EMPTY`.
+`PlayablePuzzle` objects offer a __modifiable__ grid of type `IGrid<IPlayablePuzzleSquare>`.
+Each square in this grid can contain one of *three* possible values: `Square.UNKNOWN`, `Square.FILLED` or `Square.EMPTY`.
 
-We encourage you to take a look through the domain code and find this `PlayablePuzzle` class. However,
-you'll find that it is declared `internal`, i.e. it is private to the domain. What now?
+We encourage you to take a look through the domain code and find this `PlayablePuzzle` class.
+However, you'll find that it is declared `internal`, i.e., it is private to the domain.
+What now?
 
-We endeavored to minimize the number of domain classes
-you can instantiate directly. The reason is that once we allow you to create
-a `PlayablePuzzle` directly, this takes a lot of freedom away from us domain authors:
-the `PlayablePuzzle` class cannot be renamed without breaking your code,
-we cannot redesign it, etc. But, admittedly, making it `internal` makes it rather useless, as
-you cannot access it at all.
+We endeavored to minimize the number of domain classes you can instantiate directly.
+The reason is that once we allow you to create a `PlayablePuzzle` directly, this takes a lot of freedom away from us domain authors: the `PlayablePuzzle` class cannot be renamed without breaking your code, we cannot redesign it, etc.
+But, admittedly, making it `internal` makes it rather useless, as you cannot access it at all.
 
-A solution to this problem consists relying on interfaces. The
-interface makes certain guarantees about what functionality we will provide,
-so that at least you can actually intereact with it. On our side, we can do all kinds
-of crazy stuff: we can have this interface implemented by any class we want, we
-can spread it out over multiple classes, etc. So, using interfaces gives you promises of functionality
-and gives us freedom of design. It's a win win situation!
+A solution to this problem consists relying on interfaces.
+The interface makes certain guarantees about what functionality we will provide, so that at least you can actually intereact with it.
+On our side (the implementers of the domain code), we can do all kinds of crazy stuff: we can have this interface implemented by any class we want, we can spread it out over multiple classes, etc.
+So, using interfaces gives you functionality and gives us freedom of design.
+It's a win win situation.
 
-Well, almost. Interfaces have a limitation: they cannot be instantiated.
+Well, almost.
+Interfaces have a limitation: they cannot be instantiated.
 To remedy this, we introduce factory methods, available in the `PiCrossFacade` class:
 
-```c#
+[source,csharp]
+----
 var puzzle = Puzzle.FromRowStrings(
     "xxxxx",
     "x...x",
@@ -100,45 +98,41 @@ var puzzle = Puzzle.FromRowStrings(
 );
 var facade = new PiCrossFacade();
 var playablePuzzle = facade.CreatePlayablePuzzle(puzzle);
-```
+----
 
 Here, `CreatePlayablePuzzle` wraps `puzzle` inside a `IPlayablePuzzle` object.
 
-## Using a Playable Puzzle
+== Using a Playable Puzzle
 
-Let's take a look at this `IPlayablePuzzle` interface. It contains only a few members:
+Let's take a look at this `IPlayablePuzzle` interface.
+It contains only a few members:
 
 * `Grid` represents the current state of the grid.
-  This is what the player interacts with: (s)he's supposed to be able to
-  change an arbitrary square of the grid to filled, empty (or back to unknown.)
+  This is what the player interacts with: (s)he's supposed to be able to change an arbitrary square of the grid to filled, empty (or back to unknown.)
 * `ColumnConstraints` and `RowConstraints` represent the constraints.
-* `IsSolved` is a `Cell<bool>`. If `true`, it means the grid, in its current state, contains
-  the correct solution, i.e. the puzzle is solved.
+* `IsSolved` is a `Cell<bool>`.
+  If `true`, it means the grid, in its current state, contains the correct solution, i.e. the puzzle is solved.
   `false` means the opposite.
 
-The `Grid` and both `Constraints` properties are actually upgraded version
-of their `Puzzle` counterparts: they all rely heavily on `Cell`s, which
-makes it easy for you to bind your GUI controls to them. They also
-offer extra information such as `IsSatisfied` in `IPlayablePuzzleConstraints` and
-`IPlayablePuzzleConstraintsValue`.
-You should take a quick peek at `IPlayablePuzzle` and the related interfaces
-to get an idea of what functionality they offer.
+The `Grid` and both `Constraints` properties are actually upgraded version of their `Puzzle` counterparts: they all rely heavily on `Cell`s, which makes it easy for you to bind your GUI controls to them.
+They also offer extra information such as `IsSatisfied` in `IPlayablePuzzleConstraints` and `IPlayablePuzzleConstraintsValue`.
+You should take a quick peek at `IPlayablePuzzle` and the related interfaces to get an idea of what functionality they offer.
 
-## Visualizing a Playable Puzzle
+== Visualizing a Playable Puzzle
 
 If there's anything you need to learn about software development, it's this: baby steps.
-We're serious. Don't try to create the entire GUI in one go,
-because if it doesn't work, you won't know where to look for mistakes.
+We're serious.
+Don't try to create the entire GUI in one go, because if it doesn't work, you won't know where to look for mistakes.
 
-Let's start with visualizing the puzzle. This is probably the most
-complicated part of developing PiCross, and unfortunately, we have
-little choice but to start with it. To alleviate your pain, we
-have written a `PiCrossControl` for you.
+Let's start with visualizing the puzzle.
+This is probably the most complicated part of developing PiCross, and unfortunately, we have
+little choice but to start with it.
+To alleviate your pain, we have written a `PiCrossControl` for you.
 
 ### Step 1: Red Rectangles
 
-To learn to work with it, careful experimentation is key. Let's start
-with adding a `PiCrossControl` to our `MainWindow`:
+To learn to work with it, careful experimentation is key.
+Let's start with adding a `PiCrossControl` to our `MainWindow`:
 
 ```diff
   <Window x:Class="View.MainWindow"
