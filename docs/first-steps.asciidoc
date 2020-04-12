@@ -857,9 +857,114 @@ You'll need to update the binding so as to refer to a specific property
 of this object: `{Binding SomePropertyOfTheDataContext}`.
 ====
 
+[NOTE,caption={task-caption}]
+====
+Do the same for the column constraints.
+====
+
+== Introducing VMs
+
+NOTE: There are many ways to design your application.
+This is just one way.
+Feel free to digress from the path laid out here a bit.
+
+Right now, your code initializes the `PiCrossControl` in ``MainWindow``'s constructor:
+
+[source,csharp]
+----
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        var puzzle = Puzzle.FromRowStrings(
+            "xxxxx",
+            "x...x",
+            "x...x",
+            "x...x",
+            "xxxxx"
+        );
+        var facade = new PiCrossFacade();
+        var playablePuzzle = facade.CreatePlayablePuzzle( puzzle );
+
+        picrossControl.Grid = playablePuzzle.Grid;
+        picrossControl.RowConstraints = playablePuzzle.RowConstraints;
+        picrossControl.ColumnConstraints = playablePuzzle.ColumnConstraints;
+    }
+----
+
+This should not happen.
+Instead, we should rely on bindings.
+
+=== Step 1: Making Use of `DataContext`
+
+We see that the ``PiCrossControl``'s data is already grouped in a single object, namely `playablePuzzle`.
+We can set this object as the ``PiCrossControl``s `DataContext` and then have the control initialize its `Grid`, `RowConstraints` and `ColumnConstraints` using bindings.
+
+[NOTE,caption={task-caption}]
+====
+Modify ``MainWindow``'s constructor as follows:
+
+* Remove the three lines that initialize ``picrossControl``'s properties.
+* Set ``picrossControl``'s `DataContext` to `playablePuzzle`.
+* In the XAML, add `Grid`, `RowConstraints` and `ColumnConstraints` properties to the `PiCrossControl` element.
+  Bind them to the appropriate properties of the `DataContext`.
+
+Run the application to check that everything still works the same.
+====
+
+=== Step 2: Defining a VM Class
+
+In our current situation, the ``PiCrossControl``'s `DataContext` has been set to `playablePuzzle`.
+This object has type `IPlayablePuzzle`, which resides in the Model-layer.
+In other words, the V binds straight onto an M-object.
+
+This is not necessarily a problem.
+Sometimes, however, we need to be able to add some extra functionality.
+While in some cases it can be added straight into the M-class, sometimes this would "pollute" the M in a way that violates MVVM principles.
+In such cases, we should add an intermediate VM class.
+
+[NOTE,caption={task-caption}]
+====
+Wrap the M-type `IPlayablePuzzle` in a VM-class.
+
+* Define a class `PlayablePuzzleViewModel`. If you wish, you can choose a shorter name, like `PuzzleVM`.
+* Add a private `IPlayablePuzzle` field.
+* Add a constructor that allows one to initialize this field.
+* Add three "pass-through" properties that give access to the relevant data stored in `IPlayablePuzzle` (`Grid`, `RowConstraints`, `ColumnConstraints`):
+====
+
+[%collapsible]
+.Short example of a VM wrapper class
+====
+[source,csharp]
+----
+class FooModel
+{
+    public int A { get; }
+}
+
+class FooViewModel
+{
+    private readonly FooModel wrapped;
+
+    // Long notation
+    public int A
+    {
+        get { return wrapped.A; }
+    }
+
+    // Short notation
+    public int A => wrapped.A;
+}
+----
+====
+
+=== Step 3: Making Use of the VM Class
+
+
+
 == Future Steps
 
-* Start by making the column constraints work.
 * Next, you'll want to make the puzzle interactive. Start simple: make a left mouse click mark the square as filled.
 * Refactor your code so as to comply with MVVM.
 * Add the required functionality as described [here](requirements.md).
