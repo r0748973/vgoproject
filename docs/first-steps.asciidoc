@@ -122,7 +122,7 @@ It contains only a few members:
   If `true`, it means the grid, in its current state, contains the correct solution, i.e. the puzzle is solved.
   `false` means the opposite.
 
-The `Grid` and both `Constraints` properties are actually upgraded version of their `Puzzle` counterparts: they all rely heavily on `Cell`s, which makes it easy for you to bind your GUI controls to them.
+The `Grid` and both `Constraints` properties are actually upgraded version of their `Puzzle` counterparts: they all rely heavily on ``Cell``s, which makes it easy for you to bind your GUI controls to them.
 They also offer extra information such as `IsSatisfied` in `IPlayablePuzzleConstraints` and `IPlayablePuzzleConstraintsValue`.
 You should take a quick peek at `IPlayablePuzzle` and the related interfaces to get an idea of what functionality they offer.
 
@@ -199,11 +199,11 @@ First, we need a `IGrid<object>`. We can make one using `Grid.Create`.
 If we were to simply use `Grid` and `Size` in our code, the compiler would not know which one we meant.
 The `using` declarations at the top of the file resolve this ambiguity: it effectly tells the compiler that whenever you write `Grid`, you mean `DataStructures.Grid`.
 <2> Idem for `Size`.
-<3> The line added to `MainWindow`'s constructor creates a 5&times;5 grid filled with `"x"`.
+<3> The line added to ``MainWindow``'s constructor creates a 5&times;5 grid filled with `"x"`.
 Understanding the second parameter is not important, but for those interested: it's an anonymous function
 that given a parameter `p` (of type `Vector2D`, which is inferred by the compiler) returns `"x"`.
 
-So, now we've got a 5&times;5 grid filled with `"x"`es. It's a good enough start.
+So, now we've got a 5&times;5 grid filled with ``"x"``es. It's a good enough start.
 We'll fill it with more interesting values later on.
 Let's focus now on finding a way to pass this grid along to our `PiCrossControl`.
 The easiest way to achieve this is to give the control a name:
@@ -266,9 +266,10 @@ Using bindings we can access the data stored in this `DataContext`.
 
 Right now, we are ignoring the `"x"` value completely.
 Let's make it appear.
-Instead of a `Rectangle`, we'll use a `TextBlock` whose `Text` property is bound to the `Grid`'s corresponding value.
+Instead of a `Rectangle`, we'll use a `TextBlock` whose `Text` property is bound to the ``Grid``'s corresponding value.
 
-```diff
+[source,diff]
+----
     <controls:PiCrossControl x:Name="picrossControl">
         <controls:PiCrossControl.SquareTemplate>
             <DataTemplate>
@@ -277,11 +278,11 @@ Instead of a `Rectangle`, we'll use a `TextBlock` whose `Text` property is bound
             </DataTemplate>
         </controls:PiCrossControl.SquareTemplate>
     </controls:PiCrossControl>
-```
+----
 
 `{Binding}` means "take the value of the `DataContext` itself."
-Since the `DataContext` always equals `"x"`, regardless of which square is being processed, each `TextBlock`'s `Text` property should be set to `"x"`.
-You can verify this by launching the application: a 5&times;5 grid of `x`'s should appear.
+Since the `DataContext` always equals `"x"`, regardless of which square is being processed, each ``TextBlock``'s `Text` property should be set to `"x"`.
+You can verify this by launching the application: a 5&times;5 grid of ``x``'s should appear.
 
 If this works, we know we have successfully accessed the `DataContext`.
 We can now take the next step: make the `DataContext` different for each square.
@@ -312,7 +313,7 @@ Instead of having each grid square be equal to `"x"`, let's have it show the squ
     }
 ----
 
-Run the application to verify that the `x`s have indeed been replaced by coordinates.
+Run the application to verify that the ``x``s have indeed been replaced by coordinates.
 
 === Step 4: Text Squares
 
@@ -352,7 +353,7 @@ But where does that string come from?
 `playablePuzzle.Grid` returns a grid, but what is its type?
 Hovering over it makes a tooltip appear telling us its type is `IGrid<IPlayablePuzzleSquare>`.
 `IPlayablePuzzleSquare` is an interface; we'd prefer to know what the actual class is.
-In order to find out, add a breakpoint on `MainWindow.MainWindow`'s last line.
+In order to find out, add a breakpoint on ``MainWindow.MainWindow``'s last line.
 Start the application in debug mode (F5).
 Hovering over `playablePuzzle.Grid` should give you more detailed information: it's actually a `PiCross.PlayablePuzzle.PlayablePuzzleSquare`!
 This is probably what is being printed inside each square.
@@ -439,7 +440,7 @@ Go to `Square.cs` in the domain and look for question marks.
 You'll find that there's a class `Unknown` whose `Symbol` property returns `'?'`.
 This makes sense with our previous theory.
 Temporarily change it to something else, for example `@`.
-If our assumption is correct, we should be greeted by 25 `@`s.
+If our assumption is correct, we should be greeted by 25 ``@``s.
 After ensuring this is indeed the case, change it back to `?`.
 
 Why does the `PiCrossControl` decide to show the object's `Symbol`?
@@ -448,10 +449,10 @@ Look for all references to `Symbol` and you'll discover that there's simply a `S
 As you should know, using `ToString()` is the default way to render objects.
 
 We'd like to make the grid more interesting by changing some squares.
-But earlier, we told you that `Grid`s are immutable, which would mean changing a square should be impossible.
+But earlier, we told you that ``Grid``s are immutable, which would mean changing a square should be impossible.
 
 Fortunately, there's a loophole: the `Grid` itself is indeed immutable, but the *elements* of the `Grid` needn't be.
-As mentioned earlier, the `Grid` contains `IPlayablePuzzleSquare` objects, which have a `Contents` property which has type `Cell<Square>`, and a `Cell`s contents can be modified.
+As mentioned earlier, the `Grid` contains `IPlayablePuzzleSquare` objects, which have a `Contents` property which has type `Cell<Square>`, and a ``Cell``s contents can be modified.
 
 Be sure to understand the following nuances:
 
@@ -464,7 +465,7 @@ Be sure to understand the following nuances:
 
 This immutability is a good thing: the more everything stays the same, the easier it is to built a GUI for it.
 Were you to have to deal with resizable grids and changing cells, it would be much harder to keep everything in working order.
-The `Cell`s are a necessity to implement the game: without it, the player wouldn't be able to interact with the puzzle in any way.
+The ``Cell``s are a necessity to implement the game: without it, the player wouldn't be able to interact with the puzzle in any way.
 
 In `MainWindow.MainWindow`, add the following code:
 
@@ -642,7 +643,7 @@ In the XAML:
 
 Take a good look at this new XAML code:
 
-* We define the ``Rectangle``'s `Fill` property using the property element syntax (`<Rectangle.Fill>...</Rectangle.Fill`) instead of the attribute syntax (`Fill="..."`).
+* We define the ``Rectangle``'s `Fill` property using the property element syntax (`<Rectangle.Fill>...</Rectangle.Fill>`) instead of the attribute syntax (`Fill="..."`).
   We trade in readability for flexibility: we are now free to assign any object we want to `Fill`.
 * We create a `Binding` object that binds to `Contents.Value`, same as before.
 * We specify the converter using property element syntax (no more using a static resource.)
@@ -655,7 +656,7 @@ Run the application to check if everything still works.
 Without constraints, the player cannot be expected to solve the puzzle.
 Fortunately for [line-through]#us# you, `PiCrossControl` also provides the necessary logic to show constraints.
 
-Take a look at `PiCrossControl`'s code: you'll find the following properties that will seem pertinent to the task at hand:
+Take a look at ``PiCrossControl``'s code: you'll find the following properties that will seem pertinent to the task at hand:
 
 * `ColumnConstraints` of type `ISequence<object>`.
 * `RowConstraints` of type `ISequence<object>`.
@@ -755,7 +756,7 @@ Let's first upgrade our integers to lists of integers:
     }
 ----
 
-If we run the application, the numbers `1` to `5` are replaced by a rather unhelpful `Int32[]`: this is what `int[]`'s `ToString()` method returns.
+If we run the application, the numbers `1` to `5` are replaced by a rather unhelpful `Int32[]`: this is what ``int[]``'s `ToString()` method returns.
 To render lists, WPF offers the `ItemsControl`, which you should already have encountered earlier.
 
 Make the following changes to the XAML code:
@@ -837,18 +838,18 @@ of integers.
 Navigate through the code (using F12 to jump straight to a definition always comes in handy in situations like this) and see how you can match `IPlayablePuzzleConstraints` with your expectations.
 Update the bindings in the XAML so as to make the right constraints appear:
 
-```text
+....
 5
 1 1
 1 1
 1 1
 5
-```
+....
 
 [TIP]
 ====
-Both bindings will need to be corrected. Start with the `ItemsControl`'s `ItemsSource` property.
-Start by finding out what the `ItemsControl`'s `DataContext` is. A quick way (a bit hacky) is the
+Both bindings will need to be corrected. Start with the ``ItemsControl``'s `ItemsSource` property.
+Start by finding out what the ``ItemsControl``'s `DataContext` is. A quick way (a bit hacky) is the
 change the binding to `{Binding SomeCrap}`. If you run the application in debug mode, you'll notice
 error messages in the output pane. These mention which type the `DataContext` has.
 `ItemsControl` expects this to be an `IEnumerable`, but you'll find out that isn't the case.
