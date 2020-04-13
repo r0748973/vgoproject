@@ -1012,9 +1012,94 @@ Create a wrapper class for `IPlayablePuzzleSquare`.
 * Add the necessary properties so that all necessary information from `IPlayablePuzzleSquare` is made available by `SquareVM`.
 ====
 
+Now, we need to use `SquareVM`.
+We need to wrap every `IPlayablePuzzleSquare` object in a `SquareVM` object.
+So, instead of an `IGrid<IPlayablePuzzleSquare>`, we need an `IGrid<SquareVM>`.
+Luckily, this is easy to achieve.
+As explained on the link:tips.md[tips page], `IGrid<T>` offers a `Map` method that can be used to create a new `IGrid` based on the elements of another grid:
 
+[source,csharp]
+----
+IGrid<SquareVM> vmGrid = playablePuzzle.Grid.Map( square => new SquareVM(square) ).Copy();
+----
 
-== TODO ControlTemplate
+This line of code takes every `IPlayablePuzzleSquare`, wraps it in a `SquareVM` puts the results in a new `IGrid`.
+
+[NOTE,caption={task-caption}]
+====
+Update your `PuzzleVM` class.
+
+* The `Grid` property currently has type `IGrid<IPlayablePuzzleSquare>`.
+  This needs to change to `IGrid<SquareVM>`.
+* Have the `PuzzleVM` constructor create this new grid and store it in a field.
+====
+
+Run your application.
+Everything should still work the same.
+
+=== Step 5: ConstraintsVM
+
+[NOTE,caption={task-caption}]
+====
+In a similar vein, create VM wrappers for the other M-classes that the V binds to (`IPlayablePuzzleConstraints` and `IPlayablePuzzleConstraintsValue`).
+====
+
+== Making Squares Interactive
+
+`SquareVM` is where you need to put all interactions regarding a square.
+What this entails exactly depends on your choices.
+
+* You could have left clicks cycle between empty-filled-unknown.
+* You could have left click toggle between unknown and filled, and right click between unknown and empty.
+* You could support for dragging lines to change multiple squares at once.
+* ...
+
+Below are a few tips of how you could implement your desired functionality.
+
+NOTE: Do not call your `ICommand` property `Click` or any other such GUI-related name.
+Do not forget that your VM is supposed to be GUI-agnostic; using a name like `Click` violates this principle.
+For example, a command could be linked to multiple kinds of inputs (click, keyboard shortcut, voice command, tap on touchscreen, ...)
+Name your command after what it *does*, not with what you think which GUI action it will be attached to.
+
+=== `ControlTemplate`
+
+The ``PiCrossControl``'s `SquareTemplate` determines how each square will be represented visually.
+The most straightforward choice would be to make use of a `Button`.
+
+If you want to change how your button is rendered, https://docs.microsoft.com/en-us/dotnet/desktop-wpf/themes/how-to-create-apply-template[changing its template] is the way to go. A quick example:
+
+[source,xml]
+----
+<Button Background="{Binding Contents.Value}" Command="{Binding CycleContents}">
+    <Button.Template> <!--1-->
+        <ControlTemplate TargetType="{x:Type Button}"> <!--2-->
+            <Rectangle Fill="{TemplateBinding Background}"
+                       Width="{TemplateBinding Width}"
+                       Height="{TemplateBinding Height}" /> <!--3-->
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+----
+<1> Customizing the appearance of a `Button` is done by setting its `Template` property.
+<2> `ControlTemplate` is similar to ``DataTemplate``s as seen when dealing with ``ItemsControl``s.
+<3> Inside the `ControlTemplate` you can specify what the `Button` should look like.
+    Here we say that it is built out of a single `Rectangle`.
+    The ``TemplateBinding``s tell where the ``Button``'s properties should be rerouted to.
+    For example, the `Background` of a `Button` should be used as the `Fill` of the `Rectangle`.
+    In theory, you should specify where all of the ``Button``'s visual properties (such as `Background`, `Width`, `Height`, ...) should be mapped to in the `ControlTemplate`.
+
+=== `InputBindings`
+
+If you want to be able to react to both left and right mouse clicks, you can rely on https://docs.microsoft.com/en-us/dotnet/api/system.windows.uielement.inputbindings?view=netframework-4.8[`InputBindings`].
+
+[source,xml]
+----
+<Button Background="{Binding Contents.Value}" Command="{Binding CycleContents}">
+    <Button.InputBindings>
+        <MouseBinding Gesture="RightClick" Command="{Binding ToggleFilled}" />
+    </Button.InputBindings>
+</Button>
+----
 
 == Future Steps
 
