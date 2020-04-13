@@ -3,7 +3,7 @@
 Work in progress. Watch the repo (see setup instructions) to be notified whenever we update this.
 
 * [Setup Instructions](docs/setup.md)
-* [First Steps](docs/first-steps.md)
+* [First Steps](docs/first-steps.asciidoc)
 * [Tips](docs/tips.md)
 * [Overall Structure](docs/overall-structure.md)
 * [Code Samples](docs/cookbook.md)
