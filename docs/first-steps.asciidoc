@@ -927,14 +927,14 @@ In such cases, we should add an intermediate VM class.
 ====
 Wrap the M-type `IPlayablePuzzle` in a VM-class.
 
-* Define a class `PlayablePuzzleViewModel`. If you wish, you can choose a shorter name, like `PuzzleVM`.
+* Define a class `PlayablePuzzleViewModel`, or shorter, `PuzzleVM`.
 * Add a private `IPlayablePuzzle` field.
 * Add a constructor that allows one to initialize this field.
 * Add three "pass-through" properties that give access to the relevant data stored in `IPlayablePuzzle` (`Grid`, `RowConstraints`, `ColumnConstraints`):
 ====
 
 [%collapsible]
-.Short example of a VM wrapper class
+.Short example of a PuzzleVM wrapper class
 ====
 [source,csharp]
 ----
@@ -961,10 +961,61 @@ class FooViewModel
 
 === Step 3: Making Use of the VM Class
 
+Currently, your V binds straight onto the M: the `PiCrossControl` received an `IPlayablePuzzle` object as `DataContext`.
+Now, we'll insert our `PuzzleVM` in between them. In other words, the V will bind to a VM, which itself fetches its data from the M.
 
+[NOTE,caption={task-caption}]
+====
+In the `MainWindow` constructor:
+
+* Instantiate a `PuzzleVM` object. Initialize it with the `playablePuzzle`.
+* Use this `PuzzleVM` object as `DataContext` for `PiCrossControl` instead of `playablePuzzle`.
+
+Since `PuzzleVM` exposes its data under the same property names as `IPlayablePuzzle`, the bindings don't need to be updated.
+Run your application to check that everything is still operational.
+====
+
+=== Step 4: SquareVM
+
+The `PiCrossControl` now receives a `PuzzleVM` as `DataContext`, so the V goes to the VM instead of straight to the M.
+Let's take a closer look.
+
+The `PiCrossControl` takes the ``DataContext``'s `Grid` property and processes each element `E` in turn:
+
+* It instantiates the `SquareTemplate` into an actual WPF control.
+* It sets the grid element `E` as the `DataContext`.
+* It places the control in a grid.
+
+But what is this grid element `E`, i.e. what is the `DataContext` of each square?
+
+There are multiple ways of finding out. One way would be
+
+* We can look at the type of ``PiCrossControl``'s `DataContext`. It is `PuzzleVM`.
+* ``PiCrossControl``'s `Grid` property is bound to `Grid`.
+* We look at what `PuzzleVM.Grid` returns: a `Grid<IPlayablePuzzleSquare>`.
+
+In other words, this means that every `SquareTemplate` gets a `IPlayablePuzzleSquare` as `DataContext`.
+Again, we're binding the V straight onto an M-object.
+
+We __could__ leave it like that.
+However, PiCross players should be able to click on a square and have it change contents.
+This, according to MVVM principles, would have to be implemented using an `ICommand` residing in the VM layer.
+This means we'll again have to create an intermediate class that wraps around `IPlayablePuzzleSquare` to which we can add our `ICommand`.
+
+[NOTE,caption={task-caption}]
+====
+Create a wrapper class for `IPlayablePuzzleSquare`.
+
+* Create a class `SquareVM`.
+* Add a field of type `IPlayablePuzzleSquare`.
+* Add a constructor that allows a client to initialize the `IPlayablePuzzleSquare` field.
+* Add the necessary properties so that all necessary information from `IPlayablePuzzleSquare` is made available by `SquareVM`.
+====
+
+
+
+== TODO ControlTemplate
 
 == Future Steps
 
-* Next, you'll want to make the puzzle interactive. Start simple: make a left mouse click mark the square as filled.
-* Refactor your code so as to comply with MVVM.
-* Add the required functionality as described [here](requirements.md).
+Continue working on your project until it satisfies the link:requirements.md[requirements].
