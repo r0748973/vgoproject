@@ -14,7 +14,7 @@ This page describes the minimal functionality you should implement.
   * Possibility to mark squares as filled, empty or unknown
   * Visual distinction between satisfied and unsatisfied constraints (on both levels: entire constraints and single numbers)
   * Notification when puzzle is solved
-* Multiple Screens (these are not necessarily multiple windows! The same GUI window can be reused, which implementation-wise is easier to achieve)
+* Multiple Screens (these are not necessarily multiple windows! The same GUI window can be reused, which implementation-wise is easier to achieve. Example of how to do this available in the samples repository.)
   * Introduction Screen
   * Puzzle Solving Screen
   * Puzzle Selection Screen
@@ -43,7 +43,7 @@ This page describes the minimal functionality you should implement.
   * Group in solved/nonsolved, by size
   * Best times
   * Filter to show only unsolved puzzles
-  * Filter tho show only puzzles of specific size
+  * Filter to show only puzzles of specific size
 * Puzzle Editor
   * Check for ambiguity (functionality readily present in domain code)
 * Sound/Music
