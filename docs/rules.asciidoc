@@ -30,7 +30,7 @@ Below is a list of rules which you have to respect.
 The M/VM/V layering must be respected at all cost.
 The "knows-of" relation flows downwards in the diagram below:
 
-[%header,cols="^",width="10%"]
+[cols="^",width="10%"]
 |===
 | V
 | VM
