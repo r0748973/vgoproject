@@ -173,11 +173,6 @@ The VM should not in any way make reference to such things.
 If you want some sound to start playing at a certain event (e.g. puzzle is solved), the VM should only provide a way to be notified when the puzzle is solved (e.g. an event or a `Cell<bool>`).
 It is up to the view to keep an eye on this event/cell and play the sound when needed.
 
-== Program Initialization
-
-Move your program initialization to the `App` class, more specifically override its `OnStartup` method.
-Here you can create your main window and set its `DataContext` to your main View Model class.
-
 == Duplication
 
 Try to keep duplication to a minimum.
