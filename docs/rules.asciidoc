@@ -76,7 +76,7 @@ class PersonViewModel
     public PersonViewModel()
     {
         // Have GenderColor automatically synchronize with IsMale
-        GenderColor = IsMale.Derive( m => m ? Brushes.Blue ? Brushes.Pink );
+        GenderColor = IsMale.Derive( m => m ? Brushes.Blue : Brushes.Pink );
     }
 
     public Cell<bool> IsMale { get; }
