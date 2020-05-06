@@ -154,6 +154,8 @@ namespace PiCross
             public PlayablePuzzleSquareContentsCell Contents { get; }
 
             public Vector2D Position { get; }
+
+
         }
 
         private class PlayablePuzzleSquareContentsCell : ManualCell<Square>
