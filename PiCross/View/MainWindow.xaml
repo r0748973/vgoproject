@@ -8,59 +8,10 @@
         xmlns:converters="clr-namespace:View.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Window.Resources>
-        <converters:SquareConverter Empty="White" Filled="Black" Unknown="Gray" x:Key="collorConverter"/>
-    </Window.Resources>
+
     
     <Grid>
-        <controls:PiCrossControl x:Name="picrossControl" Grid="{Binding Grid}" RowConstraints="{Binding RowConstraints}"  ColumnConstraints="{Binding ColumnConstraints}">
-            <controls:PiCrossControl.SquareTemplate>
-                <DataTemplate>
-                    <Button HorizontalAlignment="Center">
-                        <Button.Content>
-                            <Rectangle Width="32" Height="32"  Fill="{Binding Contents.Value, Converter={StaticResource collorConverter}}"/>
-                        </Button.Content>
-                        <Button.InputBindings>
-                            <MouseBinding Gesture="LeftClick" Command="{Binding Fill}" />
-                            <MouseBinding Gesture="MiddleClick" Command="{Binding Unknown}"/>
-                            <MouseBinding Gesture="RightClick" Command="{Binding Empty}"  />
-
-                        </Button.InputBindings>
-                    </Button>
-                </DataTemplate>
-            </controls:PiCrossControl.SquareTemplate>
-            <controls:PiCrossControl.RowConstraintsTemplate>
-                <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding Values}" >
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Width="32" Height="32" Text="{Binding Value}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DataTemplate>
-            </controls:PiCrossControl.RowConstraintsTemplate>
-            <controls:PiCrossControl.ColumnConstraintsTemplate>
-                <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding Values}" >
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Width="32" Height="32" Text="{Binding Value}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DataTemplate>
-            </controls:PiCrossControl.ColumnConstraintsTemplate>
-        </controls:PiCrossControl>
+        <TextBlock Text="hallo"/>
+        <ContentControl Content="{Binding ActiveWindow}"/>
     </Grid>
 </Window>

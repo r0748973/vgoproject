@@ -34,5 +34,15 @@ namespace ViewModel
         public Cell<bool> IsSatisfied => playablePuzzleConstraints.IsSatisfied;
 
     }
+    public class ConstraintsValueVM
+    {
+        private readonly IPlayablePuzzleConstraintsValue playablePuzzleConstraintsValue;
+        public ConstraintsValueVM(IPlayablePuzzleConstraintsValue playablePuzzleConstraintsValue)
+        {
+            this.playablePuzzleConstraintsValue = playablePuzzleConstraintsValue;
+        }
+
+        public Cell<bool> IsSatisfiedValue => playablePuzzleConstraintsValue.IsSatisfied;
+    }
 
 }

@@ -12,23 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Grid = DataStructures.Grid;
-using Size = DataStructures.Size;
-using PiCross;
-using DataStructures;
 using ViewModel;
 
-namespace View
+namespace View.Screens
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for GameScreen.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class GameScreen : UserControl
     {
-        public MainWindow()
+        public GameScreen()
         {
             InitializeComponent();
-
+            
         }
     }
 }
