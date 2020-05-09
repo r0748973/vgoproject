@@ -16,6 +16,7 @@ using Grid = DataStructures.Grid;
 using Size = DataStructures.Size;
 using PiCross;
 using DataStructures;
+using ViewModel;
 
 namespace View
 {
@@ -30,7 +31,7 @@ namespace View
 
             var puzzle = Puzzle.FromRowStrings(
                 "xxxxx",
-                "x...x",
+                "xx..x",
                 "x...x",
                 "x...x",
                 "xxxxx"
@@ -39,8 +40,11 @@ namespace View
             var playablePuzzle = facade.CreatePlayablePuzzle(puzzle);
             playablePuzzle.Grid[new Vector2D(0, 0)].Contents.Value = Square.FILLED;
             playablePuzzle.Grid[new Vector2D(1, 0)].Contents.Value = Square.EMPTY;
-            picrossControl.Grid = playablePuzzle.Grid;
-            picrossControl.RowConstraints = playablePuzzle.RowConstraints;
+            var puzzleVM = new PuzzleVM(playablePuzzle);
+            picrossControl.DataContext = puzzleVM;
+            //picrosscontrol.grid = playablepuzzle.grid;
+            //picrosscontrol.rowconstraints = playablepuzzle.rowconstraints;
+            //picrosscontrol.columnconstraints = playablepuzzle.columnconstraints;
         }
     }
 }
